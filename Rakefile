@@ -13,7 +13,7 @@ end
 
 desc "run tests"
 task :test do
-	sh "rspec #{FileList["test/*.rb"]}"
+	sh ".rspec #{FileList["test/*.rb"]}"
 end
 
 task :gem => :update do
@@ -21,11 +21,17 @@ task :gem => :update do
 end
 
 task :update do
-  sh "bundle install"
+  # no-op for now
 end
 
 desc "generate docs and build a gem"
 task :package => [:doc, :gem]
+
+desc "publish the gem"
+task :publish => :package do
+  version = File.read("VERSION").chomp
+  sh "gem push befog-#{version}.gem"
+end
 
 desc "build and install the gem"
 task :install => :package do
